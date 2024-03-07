@@ -1,0 +1,17 @@
+@tailwind base;
+
+@layer base {
+  html {
+    @apply h-[100dvh];
+  }
+  body {
+    @apply h-full w-full;
+  }
+  #root {
+    @apply h-full w-full;
+  }
+}
+
+@tailwind components;
+@tailwind utilities;
+
