@@ -1,39 +1,79 @@
-import {useEffect, useRef, useState} from "react";
+import React, {useCallback, useEffect, useRef, useState} from "react";
+import MenuItem from './MenuItem';
 
-export default function HomePage() {
-  const [selected, setSelected] = useState(1)
+interface HomePageProps {
+  stateSetter: (state: string) => void;
+}
+
+const HomePage: React.FC<HomePageProps> = ({ stateSetter }) => {
+  const [selected, setSelected] = useState(1);
   const tickSound = useRef(new Audio("/src/assets/sounds/s1.wav")).current;
   const denySound = useRef(new Audio("/src/assets/sounds/denied.mp3")).current;
-  const menuCount = 3;
-  const handleHover = (index: number) => {
-    if (selected === index) return;
-    setSelected(index);
-    tickSound.play().then();
+
+  interface MenuItem {
+    key: number;
+    name: string;
+    text: string;
+    action: () => void;
   }
 
-  const handleKeyPress = (event: { key: string; }) => {
-    if (event.key === "ArrowUp") {
-      setSelected(selected => {
-        if (selected > 1) {
-          tickSound.play().then()
-          return selected - 1
-        } else {
-          denySound.play().then()
-          return 1
-        }
-      });
-    } else if (event.key === "ArrowDown") {
-      setSelected(selected => {
-        if (selected < menuCount) {
-          tickSound.play().then()
-          return selected + 1
-        } else {
-          denySound.play().then()
-          return menuCount
-        }
-      });
+  const menuItems: Record<number, MenuItem> = {
+    1: {
+      key: 1,
+      name: "terminal",
+      text: "Terminal",
+      action: () => {
+        stateSetter('Terminal')
+      }
+    },
+    2: {
+      key: 2,
+      name: "radar",
+      text: "Radar",
+      action: () => {
+        console.log("radar")
+      }
+    },
+    3: {
+      key: 3,
+      name: "exit",
+      text: "Exit",
+      action: () => {
+        window.location.href = 'http://localhost';
+      }
     }
-  };
+  }
+
+  const handleHover = useCallback((index: number) => {
+    if (selected !== index) {
+      setSelected(index);
+      tickSound.play().then();
+    }
+  }, [selected, tickSound]);
+
+  const handleKeyPress = useCallback((event: KeyboardEvent) => {
+    if (event.key === "ArrowUp" || event.key === "ArrowDown") {
+      setSelected((prevSelected) => {
+        const menuItemCount = Object.keys(menuItems).length;
+        let newSelected = prevSelected;
+
+        if (event.key === "ArrowUp") {
+          newSelected = prevSelected > 1 ? prevSelected - 1 : 1;
+        } else if (event.key === "ArrowDown") {
+          newSelected = prevSelected < menuItemCount ? prevSelected + 1 : menuItemCount;
+        }
+
+        (newSelected !== prevSelected ? tickSound : denySound).play().then();
+
+        return newSelected;
+      });
+    } else if (event.key === "Enter") {
+      setSelected((prevSelected) => {
+        menuItems[prevSelected]?.action();
+        return prevSelected;
+      })
+    }
+  }, [selected, menuItems]);
 
   useEffect(() => {
     window.addEventListener("keydown", handleKeyPress);
@@ -44,27 +84,18 @@ export default function HomePage() {
   }, []);
 
   return (
-    <div className="w-full h-full flex flex-col justify-center items-center gap-[32px] select-none fall">
+    <div className="w-full h-full flex flex-col justify-center items-center gap-[32px] select-none text-glow">
       <span className="text-4xl animate-pulse cursor-not-allowed">
         Hello <span className="text-white">World!</span>
       </span>
       <div className="flex flex-col gap-[8px] items-center transition ease-in w-[130px]">
-        <div className="flex justify-center items-center gap-[8px] animate-pulse cursor-pointer">
-          <span
-            className={"text-lg transition ease-in " + (selected === 1 ? "opacity-100" : "!opacity-0")}>{"> "}</span>
-          <span onMouseEnter={() => handleHover(1)}>Terminal</span>
-        </div>
-        <div className="flex justify-center items-center gap-[8px] animate-pulse cursor-pointer">
-          <span
-            className={"text-lg transition ease-in " + (selected === 2 ? "opacity-100" : "!opacity-0")}>{"> "}</span>
-          <span onMouseEnter={() => handleHover(2)}>Radar</span>
-        </div>
-        <div className="flex justify-center items-center gap-[8px] animate-pulse cursor-pointer">
-          <span
-            className={"text-lg transition ease-in " + (selected === 3 ? "opacity-100" : "!opacity-0")}>{"> "}</span>
-          <span onMouseEnter={() => handleHover(3)}>Exit</span>
-        </div>
+        {Object.values(menuItems).map((item) => (
+          <MenuItem key={item.key} text={item.text} isSelected={selected === item.key}
+                    onHover={() => handleHover(item.key)} onClick={() => menuItems[selected].action()} />
+        ))}
       </div>
     </div>
   )
 }
+
+export default HomePage
