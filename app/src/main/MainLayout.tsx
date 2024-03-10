@@ -34,7 +34,7 @@ export default function MainLayout() {
   }, []);
 
   return (
-    <div className="ntainer-noise">
+    <div className="container-noise">
 
       <div className="noise" />
       <div className="overlay" />

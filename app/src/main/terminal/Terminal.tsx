@@ -1,5 +1,7 @@
-import React, {useEffect, useRef} from "react";
+import React, {useCallback, useEffect, useRef, useState} from "react";
 import {motion} from "framer-motion";
+import HelpCommand from "./commands/HelpCommand.tsx";
+import Command from "./commands/Command.tsx";
 
 interface TerminalProps {
   state: string,
@@ -9,6 +11,9 @@ interface TerminalProps {
 
 const Terminal: React.FC<TerminalProps> = ({ state, stateSetter, dragRef }) => {
   const textRef: React.RefObject<HTMLInputElement> = useRef(null);
+  const [commandsHistory, setCommandsHistory] = useState(['help'])
+  const [commandText, setCommandText] = useState('')
+
   const terminalContent = {
     hidden: { opacity: 0, scale: 0.8 },
     visible: {
@@ -18,11 +23,31 @@ const Terminal: React.FC<TerminalProps> = ({ state, stateSetter, dragRef }) => {
   };
 
   useEffect(() => {
-    setTimeout(()  => {
+    setTimeout(() => {
       textRef.current?.focus();
     }, 100)
   }, [state]);
 
+  const handleKeyPress = useCallback((event: KeyboardEvent) => {
+    if (event.key === "Enter") {
+      setCommandText(command => {
+        const normalCommand = command.trim()
+        console.log(normalCommand)
+        if (normalCommand.length) {
+          setCommandsHistory(currentHistory => [...currentHistory, normalCommand]);
+        }
+        return ''
+      })
+    }
+  }, []);
+
+  useEffect(() => {
+    window.addEventListener("keydown", handleKeyPress);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyPress);
+    };
+  }, []);
 
   return (
     <motion.div
@@ -33,7 +58,7 @@ const Terminal: React.FC<TerminalProps> = ({ state, stateSetter, dragRef }) => {
       onClick={() => textRef.current?.focus()}
     >
       <motion.div className="bg-[#dadada] h-[28px] w-full flex justify-center items-center relative">
-        <span className="text-black text-sm !drop-shadow-none">meysam-rajaei -zsh - 79x34</span>
+        <span className="text-black text-sm !drop-shadow-none">meysam-rajaei -zsh</span>
         <div className="flex gap-[8px] absolute left-[7px] group text-black text-[12px]">
           <div className="flex justify-center items-center rounded-full w-[13px] h-[13px] bg-red-600"
                onClick={() => stateSetter('HomePage')}>
@@ -47,14 +72,19 @@ const Terminal: React.FC<TerminalProps> = ({ state, stateSetter, dragRef }) => {
           </div>
         </div>
       </motion.div>
-      <div className="h-full px-[4px] py-[2px] text-sm">
-        Last login: Thu Mar 7 23:37:14 | -help for commands lists
+      <div className="h-full w-full overlay-x-scroll flex flex-col px-[4px] py-[2px] text-sm gap-[8px]">
+        {commandsHistory.map((item: string, index: number) => (
+          <Command command={item} key={index} />
+        ))}
+
+
         <div className="w-full h-fit flex gap-[8px]">
-              <span className="w-fit whitespace-nowrap">
-                meysam-rajaei@MacBook ~ $
-              </span>
-          <input ref={state === "Terminal" ? textRef : null} maxLength={20} type="text"
-                 className="bg-transparent focus:ring-0 focus:outline-none w-full" />
+          <span className="w-fit whitespace-nowrap text-white">
+            $
+          </span>
+          <input ref={state === "Terminal" ? textRef : null} maxLength={20} type="text" value={commandText}
+                 onChange={(e) => setCommandText(e.target.value)}
+                 className="bg-transparent focus:ring-0 focus:outline-none w-full font-bold" />
         </div>
       </div>
     </motion.div>
