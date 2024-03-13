@@ -44,7 +44,7 @@ export default function MainLayout() {
         variants={terminalContainer}
         initial="visible"
         animate={state === "HomePage" ? "visible" : "hidden"}>
-        <HomePage stateSetter={setState} />
+        {state === "HomePage" && <HomePage stateSetter={setState} />}
       </motion.div>
 
       <motion.div

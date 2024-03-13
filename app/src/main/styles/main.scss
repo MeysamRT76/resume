@@ -1,3 +1,24 @@
+/* Customizes the whole scrollbar */
+::-webkit-scrollbar {
+  width: 6px; /* Makes the scrollbar thin */
+}
+
+/* Customizes the background of the scrollbar track */
+::-webkit-scrollbar-track {
+  background: black; /* Sets the background color of the track to black */
+}
+
+/* Customizes the scrollbar thumb */
+::-webkit-scrollbar-thumb {
+  background: gray; /* Sets the color of the scrollbar thumb to gray */
+  border-radius: 10px;
+}
+
+/* Optionally, add some hover effects to the scrollbar thumb */
+::-webkit-scrollbar-thumb:hover {
+  background: darkgray; /* Darkens the thumb on hover for better visibility */
+}
+
 .container-noise {
   height: 100%;
   width: 100%;
