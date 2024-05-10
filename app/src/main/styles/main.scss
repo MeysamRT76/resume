@@ -93,3 +93,14 @@
     background-position: 0 100vh;
   }
 }
+
+a {
+  color: #2b7110; // Unvisited links
+  text-decoration: none; // Remove underline
+
+  &:hover,
+  &:active,
+  &:visited {
+    text-decoration: underline;
+  }
+}

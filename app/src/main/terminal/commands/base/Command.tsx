@@ -1,6 +1,9 @@
 import React from "react";
-import HelpCommand from "./HelpCommand.tsx";
-import UnsupportedCommand from "./UnsupportedCommand.tsx";
+import Help from "../Help";
+import Error from "../Error";
+import Ls from "../Ls";
+import Whoami from "../Whoami";
+import History from "../History";
 
 interface CommandProps {
   command: string,
@@ -18,37 +21,25 @@ export const commandsList: Record<string, commandType> = {
     key: 1,
     name: "whoami",
     description: "Description about me.",
-    result: HelpCommand,
+    result: Whoami,
   },
   ls: {
     key: 2,
     name: "ls",
     description: "List of my skills.",
-    result: HelpCommand,
+    result: Ls,
   },
-  where: {
+  history: {
     key: 2,
-    name: "where",
-    description: "Where was I working before?",
-    result: HelpCommand,
-  },
-  jobs: {
-    key: 2,
-    name: "jobs",
-    description: "What am I working on?",
-    result: HelpCommand,
-  },
-  contact: {
-    key: 2,
-    name: "contact",
-    description: "How to contact me.",
-    result: HelpCommand,
+    name: "history",
+    description: "My History",
+    result: History,
   },
   help: {
     key: 3,
     name: "help",
     description: "Commands list and description.",
-    result: HelpCommand,
+    result: Help,
   },
   clear: {
     key: 4,
@@ -83,7 +74,7 @@ const Command: React.FC<CommandProps> = ({ command }) => {
             }
           </React.Fragment>
         ) : (
-          <UnsupportedCommand />
+          <Error />
         )}
       </div>
     </div>

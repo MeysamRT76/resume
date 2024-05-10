@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect, useRef, useState} from "react";
 import {motion} from "framer-motion";
-import Command, {commandsList} from "./commands/Command.tsx";
+import Command, {commandsList} from "./commands/base/Command.tsx";
 
 interface TerminalProps {
   state: string,
