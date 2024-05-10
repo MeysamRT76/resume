@@ -17,4 +17,5 @@ My Stunning Resume
 * [ ] add content about site and usage terms
 * [ ] maybe remove env and use somthing else for better readablity
 * [ ] disable back btn
+* [ ] mobile unfocus textbox after enter command
 
