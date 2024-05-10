@@ -16,4 +16,5 @@ My Stunning Resume
 * [ ] cleanup components
 * [ ] add content about site and usage terms
 * [ ] maybe remove env and use somthing else for better readablity
+* [ ] disable back btn
 
