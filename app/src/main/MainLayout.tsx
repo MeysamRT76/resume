@@ -1,11 +1,10 @@
 import "./styles/main.scss";
 import HomePage from "./homepage/HomePage.tsx";
-import {useCallback, useEffect, useRef, useState} from "react";
-import {motion} from "framer-motion"
+import { useCallback, useEffect, useState } from "react";
+import { motion } from "framer-motion"
 import Terminal from "./terminal/Terminal.tsx";
 
 export default function MainLayout() {
-  const dragRef = useRef(null)
   const [state, setState] = useState('HomePage')
 
   const terminalContainer = {
@@ -41,19 +40,18 @@ export default function MainLayout() {
 
       <motion.div
         className="w-full h-full"
-        variants={terminalContainer}
+        variants={ terminalContainer }
         initial="visible"
-        animate={state === "HomePage" ? "visible" : "hidden"}>
-        {state === "HomePage" && <HomePage stateSetter={setState} />}
+        animate={ state === "HomePage" ? "visible" : "hidden" }>
+        { state === "HomePage" && <HomePage stateSetter={ setState } /> }
       </motion.div>
 
       <motion.div
-        className="absolute top-0 w-full h-full justify-center items-center select-none bg-transparent z-10"
-        variants={terminalContainer}
+        className="absolute top-0 w-full h-full justify-center items-center select-none bg-transparent z-10 overflow-hidden"
+        variants={ terminalContainer }
         initial="hidden"
-        ref={dragRef}
-        animate={state === "Terminal" ? "visible" : "hidden"}>
-        <Terminal state={state} dragRef={dragRef} stateSetter={setState} />
+        animate={ state === "Terminal" ? "visible" : "hidden" }>
+        <Terminal state={ state } stateSetter={ setState } />
       </motion.div>
 
     </div>

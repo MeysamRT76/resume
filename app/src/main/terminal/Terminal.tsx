@@ -1,14 +1,14 @@
 import React, {useCallback, useEffect, useRef, useState} from "react";
 import {motion} from "framer-motion";
 import Command, {commandsList} from "./commands/base/Command.tsx";
+import { isMobileWidth } from "../utils/ResponsiveUtils.tsx";
 
 interface TerminalProps {
   state: string,
   stateSetter: (state: string) => void,
-  dragRef: React.RefObject<HTMLDivElement>
 }
 
-const Terminal: React.FC<TerminalProps> = ({ state, stateSetter, dragRef }) => {
+const Terminal: React.FC<TerminalProps> = ({ state, stateSetter }) => {
   const textRef: React.RefObject<HTMLInputElement> = useRef(null);
   const [commandsHistory, setCommandsHistory] = useState(['help'])
   const [commandText, setCommandText] = useState('')
@@ -55,7 +55,9 @@ const Terminal: React.FC<TerminalProps> = ({ state, stateSetter, dragRef }) => {
 
   useEffect(() => {
     setTimeout(() => {
-      textRef.current?.focus();
+      if (!isMobileWidth()) {
+        textRef.current?.focus();
+      }
       textRef.current?.scrollIntoView();
     }, 100)
   }, [state, commandsHistory, fullScreenTerminal]);
@@ -71,6 +73,10 @@ const Terminal: React.FC<TerminalProps> = ({ state, stateSetter, dragRef }) => {
         const normalCommand = command.trim()
         if (normalCommand.length) {
           setCommandsHistory(currentHistory => [...currentHistory, normalCommand]);
+        }
+        if (isMobileWidth()) {
+          // Blur the text box to hide the keyboard, allowing the user to better see the results of the command.
+          textRef.current?.blur();
         }
         return ''
       })
@@ -124,14 +130,13 @@ const Terminal: React.FC<TerminalProps> = ({ state, stateSetter, dragRef }) => {
     };
   }, [commandsHistory, commandIndex]);
 
+
   return (
     <motion.div
       className={"rounded-[8px] bg-black/100 flex flex-col border-[0.1px] border-[#dadada] border-opacity-40 " +
         (fullScreenTerminal ? "w-full h-full" : "mx-[16px] w-[500px] sm:w-[600px] lg:w-[700px] h-[400px] lg:h-[500px]")}
       variants={terminalContent}
       animate={fullScreenTerminal ? "fullScreen" : "default"}
-      dragConstraints={dragRef}
-      drag={!fullScreenTerminal}
       onClick={() => textRef.current?.focus()}
     >
       <motion.div className="bg-[#dadada] rounded-t-[8px] h-[28px] w-full flex justify-center items-center relative">

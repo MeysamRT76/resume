@@ -5,10 +5,9 @@ My Stunning Resume
 
 * [x] Tab autocomplete (implement tab completion functionality)
 * [x] Navigate to previous commands (implement arrow key navigation for historical commands)
-* [ ] Terminal drag by navbar (enable dragging the terminal window by the navbar)
 * [x] Help Page (create a dedicated help page with documentation)
 * [ ] Mobile Manu bugs
-* [ ] Responsive bugs
+* [x] Responsive bugs
 * [ ] terminal window minimize and maximize icon
 * [x] resume content
 * [ ] fav icon
@@ -16,6 +15,6 @@ My Stunning Resume
 * [ ] cleanup components
 * [ ] add content about site and usage terms
 * [ ] maybe remove env and use somthing else for better readablity
-* [ ] disable back btn
-* [ ] mobile unfocus textbox after enter command
+* [x] disable back btn
+* [x] mobile unfocus textbox after enter command
 
