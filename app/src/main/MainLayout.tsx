@@ -1,8 +1,9 @@
 import "./styles/main.scss";
-import HomePage from "./homepage/HomePage.tsx";
+import HomePage from "./homePage/HomePage.tsx";
 import { useCallback, useEffect, useState } from "react";
 import { motion } from "framer-motion"
 import Terminal from "./terminal/Terminal.tsx";
+import HelpPage from "./helpPage/HelpPage.tsx";
 
 export default function MainLayout() {
   const [state, setState] = useState('HomePage')
@@ -44,6 +45,14 @@ export default function MainLayout() {
         initial="visible"
         animate={ state === "HomePage" ? "visible" : "hidden" }>
         { state === "HomePage" && <HomePage stateSetter={ setState } /> }
+      </motion.div>
+
+      <motion.div
+        className="w-full h-full"
+        variants={ terminalContainer }
+        initial="hidden"
+        animate={ state === "Help" ? "visible" : "hidden" }>
+        { state === "Help" && <HelpPage stateSetter={ setState } /> }
       </motion.div>
 
       <motion.div

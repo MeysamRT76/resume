@@ -1,5 +1,5 @@
-import React, {useCallback, useEffect, useRef, useState} from "react";
-import MenuItem from './MenuItem';
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import MenuItem from '../utils/MenuItem.tsx';
 
 interface HomePageProps {
   stateSetter: (state: string) => void;
@@ -28,10 +28,10 @@ const HomePage: React.FC<HomePageProps> = ({ stateSetter }) => {
     },
     2: {
       key: 2,
-      name: "radar",
-      text: "Radar",
+      name: "help",
+      text: "Help",
       action: () => {
-        console.log("radar")
+        stateSetter('Help')
       }
     },
     3: {
@@ -51,6 +51,12 @@ const HomePage: React.FC<HomePageProps> = ({ stateSetter }) => {
     }
   }, [selected, tickSound]);
 
+  const handleClick = useCallback((index: number) => {
+    setSelected(index);
+    tickSound.play().then();
+    menuItems[index].action();
+  }, [tickSound]);
+
   const handleKeyPress = useCallback((event: KeyboardEvent) => {
     if (event.key === "ArrowUp" || event.key === "ArrowDown") {
       setSelected((prevSelected) => {
@@ -69,6 +75,7 @@ const HomePage: React.FC<HomePageProps> = ({ stateSetter }) => {
       });
     } else if (event.key === "Enter") {
       setSelected((prevSelected) => {
+        tickSound.play().then();
         menuItems[prevSelected]?.action();
         return prevSelected;
       })
@@ -89,10 +96,10 @@ const HomePage: React.FC<HomePageProps> = ({ stateSetter }) => {
         Hello <span className="text-white">World!</span>
       </span>
       <div className="flex flex-col gap-[8px] items-center transition ease-in w-[130px]">
-        {Object.values(menuItems).map((item) => (
-          <MenuItem key={item.key} text={item.text} isSelected={selected === item.key}
-                    onHover={() => handleHover(item.key)} onClick={() => menuItems[selected].action()} />
-        ))}
+        { Object.values(menuItems).map((item) => (
+          <MenuItem key={ item.key } text={ item.text } isSelected={ selected === item.key } arrowLeft={ false }
+                    onHover={ () => handleHover(item.key) } onClick={ () => handleClick(item.key) } />
+        )) }
       </div>
     </div>
   )

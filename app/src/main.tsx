@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import './index.scss'
-import {BrowserRouter} from "react-router-dom";
+import { BrowserRouter } from "react-router-dom";
 import Navigation from "./Navigation.tsx";
 import HistoryHandler from "./HistoryHandler.tsx";
 
